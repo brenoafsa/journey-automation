@@ -1,6 +1,8 @@
 import EventRepository from '../repositories/eventRepository.js';
+import UserRepository from '../repositories/userRepository.js';
 import { eventSchema, eventUpdateSchema } from '../validation/eventValidation.js';
 import { invitationStatusSchema } from '../validation/invitationValidation.js';
+import emailQueue from '../services/emailQueue.js';
 
 class EventController {
     async create(req, res, next) {
@@ -12,25 +14,20 @@ class EventController {
 
             const event = await EventRepository.create(value);
 
-            /* for (const invite of event.participants) {
+            const now = Date.now();
+            const sendAt = new Date(event.sendInvitesAt).getTime();
+            const delay = Math.max(sendAt - now, 0);
+
+            for (const invite of event.participants) {
                 const user = await UserRepository.findById(invite.user);
                 if (user) {
-                    await emailQueue.add('send-invite', {
+                    await emailQueue.add({
                         to: user.email,
-                        eventName: event.title,
-                        message: participant.inviteMessage
-                    });
+                        subject: `Convite para o evento: ${event.title}`,
+                        text: value.inviteMessage
+                    }, { delay });
                 }
             }
-            
-            // Agendar o lembrete do evento
-            const reminderDate = new Date(event.date);
-            reminderDate.setDate(reminderDate.getDate() - 1);
-            const delay = reminderDate.getTime() - Date.now();
-
-            if (delay > 0) {
-                await emailQueue.add('send-reminder', { eventId: event._id }, { delay });
-            } */
 
             res.status(201).json(event);
         } catch (err) {
@@ -104,15 +101,17 @@ class EventController {
 
             await EventRepository.updateStatus(eventId, userId, status);
 
-            /* Se aceitou, notificar o criador do evento
-            if (value.status === 'accepted' && event.createdBy) {
-                 const invitedUser = await User.findById(userId);
-                 await emailQueue.add('send-acceptance-notification', {
-                    to: event.createdBy.email,
-                    eventName: event.title,
-                    participantName: invitedUser ? invitedUser.name : 'Um convidado'
-                });
-            } */
+            if (status === 'accepted' || status === 'declined') {
+                const invitedUser = await UserRepository.findById(userId);
+                const creator = await UserRepository.findById(event.createdBy);
+                if (creator) {
+                    await emailQueue.add({
+                        to: creator.email,
+                        subject: `Resposta ao convite do evento: ${event.title}`,
+                        text: `${invitedUser.name} ${status === 'accepted' ? 'aceitou' : 'recusou'} o convite.`
+                    });
+                }
+            }
 
             res.status(200).json({ message: `Status atualizado para ${value.status}` });
         } catch (err) {

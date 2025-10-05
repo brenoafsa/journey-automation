@@ -9,6 +9,7 @@ export const eventSchema = Joi.object({
     description: Joi.string().required(),
     location: Joi.string().required(),
     date: Joi.date().iso().required(),
+    sendInvitesAt: Joi.date().iso().required(),
     createdBy: Joi.string().hex().length(24).required(),
     inviteMessage: Joi.string().required(),
     participants: Joi.array().items(participantSchema).min(1).required()
