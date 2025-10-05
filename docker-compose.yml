@@ -44,6 +44,9 @@ services:
       MONGODB_NAME: ${MONGODB_NAME}
       REDIS_HOST: ${REDIS_HOST}
       REDIS_PORT: ${REDIS_PORT}
+      GMAIL_HOST: ${GMAIL_HOST}
+      GMAIL_USER: ${GMAIL_USER}
+      GMAIL_PASS: ${GMAIL_PASS} 
     ports:
       - "3001:3001"
     depends_on:
