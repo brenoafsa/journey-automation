@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import Usuario from './models/userSchema.js';
+import { User } from './schema/models.js';
 
 dotenv.config({ path: '../.env' });
 
@@ -13,14 +13,14 @@ const usersToSeed = [
 
 export async function seedDatabase() {
   try {
-    const userCount = await Usuario.countDocuments();
+    const userCount = await User.countDocuments();
     if (userCount > 0) {
       console.log('O banco de dados já está populado. O seed não será executado.');
       return;
     }
 
     console.log('Populando o banco de dados com usuários iniciais...');
-    await Usuario.insertMany(usersToSeed);
+    await User.insertMany(usersToSeed);
     console.log('Usuários foram inseridos com sucesso.');
   } catch (error) {
     console.error('Erro durante o processo de seed:', error);

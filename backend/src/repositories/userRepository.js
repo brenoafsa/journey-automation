@@ -1,28 +1,28 @@
-import Usuario from '../../database/models/userSchema.js';
+import { User } from '../../database/schema/models.js';
 
 class UserRepository {
     async create(data) {
-        const user = await Usuario.create(data);
+        const user = await User.create(data);
         return user;
     }
     
     async findAll() {
-        const users = await Usuario.find();
+        const users = await User.find();
         return users;
     }
 
     async findById(id) {
-        const user = await Usuario.findById(id);
+        const user = await User.findById(id);
         return user;
     }
 
     async update(id, data) {
-        const updatedUser = await Usuario.findByIdAndUpdate(id, data, { new: true });
+        const updatedUser = await User.findByIdAndUpdate(id, data, { new: true });
         return updatedUser;
     }
 
     async delete(id) {
-        const deletedUser = await Usuario.findByIdAndDelete(id);
+        const deletedUser = await User.findByIdAndDelete(id);
         return deletedUser;
     }
 }
