@@ -20,6 +20,19 @@ services:
           memory: 256M
           cpus: "0.25"
     restart: unless-stopped
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
   backend:
     build:
       context: ./backend
@@ -29,10 +42,14 @@ services:
       PORT: ${PORT}
       MONGODB_URI: ${MONGODB_URI}
       MONGODB_NAME: ${MONGODB_NAME}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
     ports:
       - "3001:3001"
     depends_on:
       mongo:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     volumes:
       - ./backend:/app
@@ -82,3 +99,4 @@ services:
 
 volumes:
   mongo-data:
+  redis-data:
