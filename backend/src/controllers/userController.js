@@ -1,5 +1,5 @@
 import userRepository from '../repositories/userRepository.js';
-import { userSchema, userUpdateSchema } from '../validation/index.js';
+import { userSchema, userUpdateSchema } from '../validation/userValidation.js';
 
 class UserController {
     async create(req, res, next) {
@@ -15,7 +15,7 @@ class UserController {
         }
     }
     
-    async readAllUsers(req, res, next) {
+    async readAll(req, res, next) {
         try {
             const users = await userRepository.findAll();
             res.status(200).json(users);
