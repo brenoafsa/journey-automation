@@ -46,7 +46,7 @@ describe('User CRUD', () => {
 
     jest.spyOn(userRepository, 'findAll').mockResolvedValue(users);
 
-    await userController.readAllUsers(req, res, next);
+    await userController.readAll(req, res, next);
 
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith(users);
