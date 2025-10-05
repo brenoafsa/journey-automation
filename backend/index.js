@@ -3,6 +3,7 @@ dotenv.config();
 import express from 'express';
 import conectarMongoDB from './database/mongoClient.js';
 import routes from './src/routes/index.js';
+import { seedDatabase } from './database/seed.js';
 
 const app = express();
 const port = process.env.PORT;
@@ -18,6 +19,7 @@ app.get('/', (req, res) => {
 async function startServer() {
     try {
         await conectarMongoDB();
+        await seedDatabase();
 
         app.listen(port, () => {
             console.log(`Servidor rodando em http://localhost:${port}`);
