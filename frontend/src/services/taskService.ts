@@ -25,7 +25,7 @@ export const taskService = {
     const response = await api.get('/task/user', { withCredentials: true });
     return response.data;
   },
-  complete: async (id: string) => {
+  completeTask: async (id: string) => {
     const response = await api.post(`/task/complete/${id}`, {}, { withCredentials: true });
     return response.data;
   }

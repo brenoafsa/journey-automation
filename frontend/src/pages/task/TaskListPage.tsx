@@ -18,7 +18,7 @@ const TaskListPage: React.FC = () => {
   }, []);
 
   const handleComplete = async (id: string) => {
-    await taskService.complete(id);
+    await taskService.completeTask(id);
     fetchTasks();
   };
 
