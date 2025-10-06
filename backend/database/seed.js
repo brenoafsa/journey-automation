@@ -1,14 +1,15 @@
 import dotenv from 'dotenv';
 import { User } from './schema/models.js';
+import bcrypt from 'bcryptjs';
 
 dotenv.config({ path: '../.env' });
 
 const usersToSeed = [
-  { name: 'Maria Clara', email: 'maria.aluna@escola.com' },
-  { name: 'João Pedro', email: 'joao.aluno@escola.com' },
-  { name: 'Carlos Andrade', email: 'diretor@escola.com' },
-  { name: 'Beatriz Lima', email: 'coordenador@escola.com' },
-  { name: 'Ricardo Souza', email: 'professor@escola.com' },
+  { name: 'Maria Clara', email: 'maria.aluna@escola.com', password: await bcrypt.hash('senha123', 10) },
+  { name: 'João Pedro', email: 'joao.aluno@escola.com', password: await bcrypt.hash('senha123', 10) },
+  { name: 'Carlos Andrade', email: 'diretor@escola.com', password: await bcrypt.hash('senha123', 10) },
+  { name: 'Beatriz Lima', email: 'coordenador@escola.com', password: await bcrypt.hash('senha123', 10) },
+  { name: 'Ricardo Souza', email: 'professor@escola.com', password: await bcrypt.hash('senha123', 10) },
 ];
 
 export async function seedDatabase() {

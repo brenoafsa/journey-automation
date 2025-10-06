@@ -1,5 +1,7 @@
 import userRepository from '../repositories/userRepository.js';
-import { userSchema, userUpdateSchema } from '../validation/userValidation.js';
+import { generateAccessToken } from '../services/tokenService.js';
+import { userSchema, userUpdateSchema, loginSchema } from '../validation/userValidation.js';
+import bcrypt from 'bcryptjs';
 
 class UserController {
     async create(req, res, next) {
@@ -8,8 +10,38 @@ class UserController {
             if (error) {
                 return res.status(400).json({ error: error.details[0].message });
             }
+
+            const hashedPassword = await bcrypt.hash(value.password, 10);
+            value.password = hashedPassword;
+
             const user = await userRepository.create(value);
-            res.status(201).json(user);
+
+            const token = generateAccessToken({ id: user.id });
+            res.status(201).json({ token });
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    async checkCredentials(req, res, next) {
+        try {
+            const { error, value } = loginSchema.validate(req.body);
+            if (error) {
+                return res.status(401).json({ error: 'Credenciais inválidas' });
+            }
+            const { email, password } = value;
+            const user = await userRepository.findByEmail(email);
+            if (!user) {
+                return res.status(401).json({ error: 'Credenciais inválidas' });
+            }
+
+            const isMatch = await bcrypt.compare(password, user.password);
+            if (!isMatch) {
+                return res.status(401).json({ error: 'Credenciais inválidas' });
+            }
+
+            const token = generateAccessToken({ id: user.id });
+            res.status(200).json({ token });
         } catch (err) {
             next(err);
         }
