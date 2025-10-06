@@ -2,7 +2,8 @@ import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  email: { type: String, required: true, match: /.+@.+/, unique: true }
+  email: { type: String, required: true, match: /.+@.+/, unique: true },
+  tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Task' }]
 });
 
 const invitationSchema = new mongoose.Schema({
@@ -21,5 +22,13 @@ const eventSchema = new mongoose.Schema({
   participants: [invitationSchema]
 });
 
+const taskSchema = new mongoose.Schema({
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  description: { type: String, required: true },
+  status: { type: String, enum: ['pending', 'completed'], default: 'pending' },
+  assignAt: { type: Date, required: true }
+});
+
 export const User = mongoose.model('User', userSchema);
 export const Event = mongoose.model('Event', eventSchema);
+export const Task = mongoose.model('Task', taskSchema);
