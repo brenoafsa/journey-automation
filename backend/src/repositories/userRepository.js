@@ -7,12 +7,12 @@ class UserRepository {
     }
     
     async findAll() {
-        const users = await User.find();
+        const users = await User.find().populate('tasks');
         return users;
     }
 
     async findById(id) {
-        const user = await User.findById(id);
+        const user = await User.findById(id).populate('tasks');
         return user;
     }
 
