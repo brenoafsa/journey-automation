@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import express from 'express';
+import cors from 'cors';
 import conectarMongoDB from './database/mongoClient.js';
 import routes from './src/routes/index.js';
 import { seedDatabase } from './database/seed.js';
@@ -8,6 +9,7 @@ import { seedDatabase } from './database/seed.js';
 const app = express();
 const port = process.env.PORT;
 
+app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 app.use(express.json());
 
 app.use(routes);
