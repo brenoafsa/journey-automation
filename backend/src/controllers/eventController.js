@@ -7,7 +7,14 @@ import emailQueue from '../services/emailQueue.js';
 class EventController {
     async create(req, res, next) {
         try {
-            const { error, value } = eventSchema.validate(req.body);
+            const userId = req.user && req.user.id ? req.user.id : req.user._id;
+
+            const body = {
+                ...req.body,
+                createdBy: userId,
+            };
+
+            const { error, value } = eventSchema.validate(body);
             if (error) {
                 return res.status(400).json({ error: error.details[0].message });
             }
@@ -57,6 +64,18 @@ class EventController {
         }
     }
 
+    async readByUserId(req, res, next) {
+        try {
+            const userId = req.user && req.user.id ? req.user.id : req.user._id;
+
+            const events = await EventRepository.findByUserId(userId);
+
+            res.status(200).json(events);
+        } catch (err) {
+            next(err);
+        }
+    }
+
     async update(req, res, next) {
         try {
             const { id } = req.params;
@@ -81,25 +100,26 @@ class EventController {
 
     async respondInvitation(req, res, next) {
         try {
-            const { error, value } = invitationStatusSchema.validate(req.body);
-             if (error) {
+            const { error, value } = invitationStatusSchema.validate({ status: req.body.status });
+            if (error) {
                 return res.status(400).json({ error: error.details[0].message });
             }
 
-            const { eventId } = req.params;
-            const { userId, status } = req.body;
+            const { id } = req.params;
+            const userId = req.user && req.user.id ? req.user.id : req.user._id;
+            const { status } = req.body;
 
-            const event = await EventRepository.findById(eventId);
+            const event = await EventRepository.findById(id);
             if (!event) {
                 return res.status(404).json({ error: 'Evento não encontrado' });
             }
 
-            const participant = EventRepository.findParticipant(eventId, userId);
+            const participant = await EventRepository.findParticipant(id, userId);
             if (!participant) {
                 return res.status(404).json({ error: 'Participante não encontrado neste evento' });
             }
 
-            await EventRepository.updateStatus(eventId, userId, status);
+            await EventRepository.updateStatus(id, userId, status);
 
             if (status === 'accepted' || status === 'declined') {
                 const invitedUser = await UserRepository.findById(userId);
