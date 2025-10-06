@@ -51,5 +51,5 @@ export const eventService = {
   async respondInvitation(eventId: string, status: 'accepted' | 'declined') {
     const response = await api.post(`/event/respond/${eventId}`, { status });
     return response.data;
-  }
+    }
 };

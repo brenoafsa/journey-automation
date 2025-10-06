@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { EventResponse } from '../../services/eventService';
-import api from '../../services/api';
+import { eventService } from '../../services/eventService';
 
 interface EventCardProps {
   event: EventResponse;
@@ -12,11 +12,9 @@ const EventCard: React.FC<EventCardProps> = ({ event, onRespond }) => {
   const navigate = useNavigate();
 
   const handleRespond = async (status: 'accepted' | 'declined') => {
-    await api.post(`/event/respond/${event._id}`, {
-      status,
-    });
+    await eventService.respondInvitation(event._id, status);
     if (onRespond) onRespond();
-  };
+    };
 
   return (
     <div
