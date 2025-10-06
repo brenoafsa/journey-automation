@@ -16,6 +16,11 @@ class UserRepository {
         return user;
     }
 
+    async findByEmail(email) {
+        const user = await User.findOne({ email });
+        return user;
+    }
+
     async update(id, data) {
         const updatedUser = await User.findByIdAndUpdate(id, data, { new: true });
         return updatedUser;
