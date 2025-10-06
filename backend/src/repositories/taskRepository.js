@@ -20,6 +20,11 @@ class TaskRepository {
         return task;
     }
 
+    async findByUserId(userId) {
+        const tasks = await Task.find({ user: userId });
+        return tasks;
+    }
+
     async update(id, data) {
         const updatedTask = await Task.findByIdAndUpdate(id, data, { new: true });
         return updatedTask;

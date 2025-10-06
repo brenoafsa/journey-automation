@@ -12,15 +12,26 @@ class EventRepository {
     }
 
     async findById(id) {
-        const event = await Event.findById(id);
+        const event = await Event.findById(id).populate('participants.user', 'name');
         return event;
+    }
+
+    async findByUserId(userId) {
+        const events = await Event.find({
+            $or: [
+                { createdBy: userId },
+                { 'participants.user': userId }
+            ]
+        });
+        return events;
     }
 
     async findParticipant(eventId, userId) {
         const event = await this.findById(eventId);
         if (!event) return null;
-        
-        return event.participants.find(p => p.user.toString() === userId);
+        return event.participants.find(p => {
+            return p.user._id.toString() === userId;
+        });
     }
 
     async update(id, data) {

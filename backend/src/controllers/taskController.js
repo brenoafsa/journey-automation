@@ -55,6 +55,16 @@ class TaskController {
         }
     }
 
+    async readByUserId(req, res, next) {
+        try {
+            const userId = req.user && req.user.id ? req.user.id : req.user._id;
+            const tasks = await TaskRepository.findByUserId(userId);
+            res.status(200).json(tasks);
+        } catch (err) {
+            next(err);
+        }
+    }
+
     async update(req, res, next) {
         try {
             const { id } = req.params;
