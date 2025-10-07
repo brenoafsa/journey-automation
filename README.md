@@ -144,7 +144,7 @@ Esses fluxos são processados de forma assíncrona, utilizando filas para garant
 ### 1. Clonar o Repositório
 
 ```bash
-git clone https://github.com/seu-usuario/journey-automation.git
+git clone https://github.com/brenoafsa/journey-automation.git
 cd journey-automation
 ```
 
