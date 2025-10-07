@@ -10,5 +10,10 @@ export const userService = {
   async getAll(): Promise<User[]> {
     const response = await api.get<User[]>('/user');
     return response.data;
-  }
+  },
+
+  async getMe(): Promise<User> {
+    const response = await api.get<User>('/user/me');
+    return response.data;
+  },
 };

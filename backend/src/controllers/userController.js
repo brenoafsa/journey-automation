@@ -66,6 +66,17 @@ class UserController {
         }
     }
 
+    async readUserById(req, res, next) {
+        try {
+            const userId = req.user && req.user.id ? req.user.id : req.user._id;
+            const user = await userRepository.findById(userId);
+            if (!user) return res.status(404).json({ error: 'Usuário não encontrado' });
+            res.json({ _id: user._id, name: user.name, email: user.email });
+        } catch (err) {
+            next(err);
+        }
+    }
+
     async update(req, res, next) {
         try {
             const { id } = req.params;
