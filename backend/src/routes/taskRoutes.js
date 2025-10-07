@@ -4,17 +4,17 @@ import auth from '../middlewares/auth.js';
 
 const taskRouter = Router();
 
-taskRouter.route('/').post(TaskController.create);
+taskRouter.route('/').post(auth, TaskController.create);
 
-taskRouter.route('/').get(TaskController.readAll);
+taskRouter.route('/').get(auth, TaskController.readAll);
 
 taskRouter.route('/user').get(auth, TaskController.readByUserId);
 
-taskRouter.route('/:id').get(TaskController.readOne);
+taskRouter.route('/:id').get(auth, TaskController.readOne);
 
-taskRouter.route('/:id').put(TaskController.update);
+taskRouter.route('/:id').put(auth, TaskController.update);
 
-taskRouter.route('/:id').delete(TaskController.delete);
+taskRouter.route('/:id').delete(auth, TaskController.delete);
 
 taskRouter.route('/complete/:id').post(auth, TaskController.completeTask);
 

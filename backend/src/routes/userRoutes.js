@@ -8,12 +8,12 @@ userRouter.route('/').post(UserController.create);
 
 userRouter.route('/login').post(UserController.checkCredentials);
 
-userRouter.route('/').get(UserController.readAll);
+userRouter.route('/').get(auth, UserController.readAll);
 
-userRouter.get('/me', auth, UserController.readUserById);
+userRouter.route('/me').get(auth, UserController.readUserById);
 
-userRouter.route('/:id').put(UserController.update);
+userRouter.route('/:id').put(auth, UserController.update);
 
-userRouter.route('/:id').delete(UserController.delete);
+userRouter.route('/:id').delete(auth, UserController.delete);
 
 export default userRouter;
