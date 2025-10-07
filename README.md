@@ -4,8 +4,8 @@ Este projeto é uma solução para automatizar o disparo de jornadas personaliza
 
 ## Pontos de Avaliação Atendidos
 
--   **Definição dos modelos/schemas:** Os modelos para `User` (Colaborador), `Event` e `Task` foram definidos utilizando Mongoose, representando claramente as entidades do sistema.
--   **Operações em segundo plano:** Funcionalidades como criação de `usuário`, criação de `evento` e agendamento de `tarefas` preparam uma `jornada` de uma ou mais `ações`.
+-   **Definição dos modelos/schemas:** Os modelos para `User`, `Event` e `Task` foram definidos utilizando Mongoose, representando claramente as entidades do sistema.
+-   **Operações em segundo plano:** Funcionalidades como criação de `User`, criação de `Event` e agendamento de `Tasks` preparam uma `jornada` de uma ou mais `ações`.
 -   **Organização do projeto:** A aplicação é dividida em `backend` e `frontend`, com uma arquitetura clara e modular em cada parte (Controllers, Services, Repositories, etc.), facilitando a manutenção e escalabilidade.
 -   **Clareza do código:** O código é bem estruturado, utilizando padrões de projeto para separação de responsabilidades.
 -   **Testes unitários:** Foram implementados testes unitários para as funcionalidades críticas do backend (criação de usuários, eventos e tarefas) utilizando Jest.
@@ -15,7 +15,7 @@ Este projeto é uma solução para automatizar o disparo de jornadas personaliza
 
 ## Arquitetura e Tecnologias
 
-A aplicação utiliza uma arquitetura de microsserviços orquestrada com Docker Compose.
+A aplicação utiliza uma arquitetura de camadas orquestrada com Docker Compose.
 
 -   **Backend**:
     -   **Framework**: Node.js com Express.js
@@ -38,11 +38,11 @@ A aplicação utiliza uma arquitetura de microsserviços orquestrada com Docker 
 ---
 
 ## Modelos de Dados (Schemas)
+//path: backend/database/schema/models.js
 
 ### 1. User
 Representa um colaborador no sistema.
 
-<!-- path: backend/database/schema/models.js -->
 User Schema:
 - **name**: String, obrigatório
 - **email**: String, obrigatório, único
@@ -52,7 +52,6 @@ User Schema:
 ### 2. Invitation
 O convite representa a participação de um usuário em um evento. No schema, cada participante de um evento é um subdocumento do tipo Invitation, contendo:
 
-<!-- path: backend/database/schema/models.js -->
 Invite Schema:
 - **user**: Referência para User, obrigatório
 - **status**: String, obrigatório, valores possíveis: 'invited', 'accepted', 'declined' (padrão: 'invited')
@@ -60,7 +59,6 @@ Invite Schema:
 ### 3. Event
 Representa uma jornada, que é uma sequência de ações. A ação inicial é o envio de um convite por e-mail em uma data agendada.
 
-<!-- path: backend/database/schema/models.js -->
 Event Schema:
 - **title**: String, obrigatório
 - **description**: String, obrigatório
@@ -74,7 +72,6 @@ Event Schema:
 ### 4. Task
 Representa uma jornada que pode ser agendada para um colaborador.
 
-<!-- path: backend/database/schema/models.js -->
 Task Schema:
 - **user**: Referência para User, obrigatório
 - **description**: String, obrigatório
