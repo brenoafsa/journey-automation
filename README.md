@@ -140,6 +140,7 @@ Esses fluxos são processados de forma assíncrona, utilizando filas para garant
 -   [Docker](https://www.docker.com/get-started)
 -   [Docker Compose](https://docs.docker.com/compose/install/)
 -   [MongoDB](https://www.mongodb.com/try/download/community)
+-   [pnpm](https://pnpm.io/installation) ou [Node.js (inclui npm)](https://nodejs.org/)
 
 ### 1. Clonar o Repositório
 
@@ -192,4 +193,8 @@ cd backend
 
 ```bash
 pnpm test
+```
+ou 
+```bash
+npm test
 ```
