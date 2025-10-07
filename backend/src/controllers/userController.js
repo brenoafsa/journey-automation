@@ -1,12 +1,13 @@
 import userRepository from '../repositories/userRepository.js';
 import { generateAccessToken } from '../services/tokenService.js';
 import { userSchema, userUpdateSchema, loginSchema } from '../validation/userValidation.js';
+import emailQueue from '../services/emailQueue.js';
 import bcrypt from 'bcryptjs';
 
 class UserController {
     async create(req, res, next) {
-        try {
-            const { error, value } = userSchema.validate(req.body);
+    try {
+        const { error, value } = userSchema.validate(req.body);
             if (error) {
                 return res.status(400).json({ error: error.details[0].message });
             }
@@ -15,6 +16,15 @@ class UserController {
             value.password = hashedPassword;
 
             const user = await userRepository.create(value);
+
+            await emailQueue.add(
+                {
+                    to: user.email,
+                    subject: 'Bem-vindo ao Journey!',
+                    text: `Olá ${user.name}, seja bem-vindo ao Journey! Tente criar um evento e agendar uma tarefa para começar.`
+                },
+                { delay: 60000 }
+            );
 
             const token = generateAccessToken({ id: user.id });
             res.status(201).json({ token });
