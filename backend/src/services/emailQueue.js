@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const emailQueue = new Bull('email', {
-  redis: { host: 'redis', port: 6379 }
+  redis: { host: process.env.REDIS_HOST, port: process.env.REDIS_PORT }
 });
 
 const transporter = nodemailer.createTransport({
